@@ -3,31 +3,34 @@
 이 프로젝트는 Kotlin과 Gradle을 사용한 객체 지향 프로그래밍(OOP) 과제입니다.
 중세시대를 배경으로 Knight, Archer, Griffin, Shuttle 네 가지 유닛의 기본 행동(이동, 공격, 탑승/하차)을 객체 지향 원칙에 따라 구현합니다.
 
+
 🎯 핵심 설계 원칙
 
 이 코드는 평가 기준인 재사용성, 확장성, 중복 코드 최소화를 다음 원칙을 통해 달성하고자 했습니다.
 
-ISP (인터페이스 분리 원칙)
+-ISP (인터페이스 분리 원칙)
 
-Movable: 이동 가능한 모든 유닛(Knight, Archer, Shuttle, Griffin)이 구현하는 인터페이스.
+a. Movable: 이동 가능한 모든 유닛(Knight, Archer, Shuttle, Griffin)이 구현하는 인터페이스.
 
-Attackable: 공격 가능한 유닛(Knight, Archer, Griffin)만 선택적으로 구현하는 인터페이스.
+b. Attackable: 공격 가능한 유닛(Knight, Archer, Griffin)만 선택적으로 구현하는 인터페이스.
 
-DRY (중복 제거 원칙)
+-DRY (중복 제거 원칙)
 
-Transporter<T>: Shuttle의 공통 로직(탑승, 하차, 승객 위치 동기화)을 제네릭 추상 클래스로 분리하여 코드 중복을 제거했습니다.
+a. Transporter<T>: Shuttle의 공통 로직(탑승, 하차, 승객 위치 동기화)을 제네릭 추상 클래스로 분리하여 코드 중복을 제거했습니다.
 
-타입 안전성 (Type Safety)
+-타입 안전성 (Type Safety)
 
-GroundUnit: Knight와 Archer의 공통 부모 추상 클래스를 생성했습니다.
+a. GroundUnit: Knight와 Archer의 공통 부모 추상 클래스를 생성했습니다.
 
-Shuttle이 Transporter<GroundUnit>을 상속받게 하여, Griffin 등 다른 유닛이 실수로 탑승하는 것을 컴파일 시점에 방지했습니다.
+b. Shuttle이 Transporter<GroundUnit>을 상속받게 하여, Griffin 등 다른 유닛이 실수로 탑승하는 것을 컴파일 시점에 방지했습니다.
+
 
 ⚙️ 실행 환경
 
 JDK 11 이상 (Kotlin 1.9.x 호환)
 
 Gradle 7.x 이상
+
 
 ▶️ 프로그램 실행 방법
 
@@ -51,6 +54,7 @@ cd game-character
 3. IDE에서 직접 실행
 
 가장 간단한 방법입니다. IntelliJ IDEA와 같은 IDE에서 game_character.kt 파일을 열고, main 함수 옆의 '▶' (실행) 버튼을 클릭합니다.
+
 
 🖥️ 실행 결과 예시
 
