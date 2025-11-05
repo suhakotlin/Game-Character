@@ -1,69 +1,89 @@
-🏰 game-character (RTS Game Character Simulation)
-이 프로젝트는 중세 시대를 배경으로 한 RTS 게임에서
-캐릭터(Unit)들의 이동 및 공격, 수송 행동을 객체지향적으로 구현한
-Kotlin + Gradle 기반 시뮬레이션 프로그램입니다.
+🚀 중세시대 RTS - 게임 캐릭터 구현 과제 (game-character)
 
-🎮 캐릭터 구성
-캐릭터	이동 방식	공격 여부	공격 방식	비고
-Knight	말을 타고 이동	가능	창으로 근접 공격 (공중 공격 불가)	Shuttle 탑승 가능
-Archer	걸어서 이동	가능	화살 공격 (지상·공중 모두 가능)	Shuttle 탑승 가능
-Griffin	날아서 이동	가능	하늘에서 번개 공격 (공중 공격 불가)	Shuttle 탑승 불가
-Shuttle	날아서 이동	불가능	없음	Knight/Archer 최대 8기 탑승 가능
+이 프로젝트는 Kotlin과 Gradle을 사용한 객체 지향 프로그래밍(OOP) 과제입니다.
+중세시대를 배경으로 Knight, Archer, Griffin, Shuttle 네 가지 유닛의 기본 행동(이동, 공격, 탑승/하차)을 객체 지향 원칙에 따라 구현합니다.
 
-🏗️ 설계 구조
-모든 캐릭터는 GameCharacter 추상 클래스를 상속
-공격이 가능한 유닛만 Attackable 인터페이스 구현
-이동 기능은 Movable 인터페이스로 분리
-Shuttle 은 공격 기능이 없고, 대신 수송 기능(board(), unloadAll())을 수행
-제네릭(Generic) 을 사용해 Shuttle이 특정 유닛(GroundUnit)만 수송 가능하도록 제한
+🎯 핵심 설계 원칙
 
-⚙️ 클래스 다이어그램 (요약)
-GameCharacter (추상 클래스)
- ├── GroundUnit (지상 유닛)
- │    ├── Knight : 근거리 공격 (창)
- │    └── Archer : 원거리 공격 (화살)
- ├── Griffin : 공중 유닛 (번개 공격)
- └── Shuttle : 수송 유닛 (Transporter<GroundUnit>)
+이 코드는 평가 기준인 재사용성, 확장성, 중복 코드 최소화를 다음 원칙을 통해 달성하고자 했습니다.
 
-🚀 실행 시나리오
-유닛 생성
-Knight 16기, Archer 16기, Shuttle 4대, Griffin 5기 생성
-탑승 및 이동
-Shuttle에 Knight 4기, Archer 4기씩 탑승
-Shuttle과 Griffin이 좌표 (10, 10) 으로 이동
-전투 및 하차
-탑승 유닛 하차 후 공격 테스트 수행
+ISP (인터페이스 분리 원칙)
 
-💬 예시 출력
+Movable: 이동 가능한 모든 유닛(Knight, Archer, Shuttle, Griffin)이 구현하는 인터페이스.
+
+Attackable: 공격 가능한 유닛(Knight, Archer, Griffin)만 선택적으로 구현하는 인터페이스.
+
+DRY (중복 제거 원칙)
+
+Transporter<T>: Shuttle의 공통 로직(탑승, 하차, 승객 위치 동기화)을 제네릭 추상 클래스로 분리하여 코드 중복을 제거했습니다.
+
+타입 안전성 (Type Safety)
+
+GroundUnit: Knight와 Archer의 공통 부모 추상 클래스를 생성했습니다.
+
+Shuttle이 Transporter<GroundUnit>을 상속받게 하여, Griffin 등 다른 유닛이 실수로 탑승하는 것을 컴파일 시점에 방지했습니다.
+
+⚙️ 실행 환경
+
+JDK 11 이상 (Kotlin 1.9.x 호환)
+
+Gradle 7.x 이상
+
+▶️ 프로그램 실행 방법
+
+이 프로젝트는 Gradle을 통해 빌드 및 실행됩니다.
+
+1. 프로젝트 클론
+
+git clone <Your-Repository-URL>/game-character.git
+cd game-character
+
+
+2. Gradle로 실행 (권장)
+
+터미널에서 다음 명령어를 입력하여 main 함수를 실행합니다.
+
+./gradlew run
+
+
+참고: 위 명령어가 동작하려면 build.gradle.kts (또는 build.gradle) 파일에 application 플러그인이 설정되어 있고, mainClass가 GameCharacterKt (파일 기반 main 함수)로 지정되어 있어야 합니다.
+
+3. IDE에서 직접 실행
+
+가장 간단한 방법입니다. IntelliJ IDEA와 같은 IDE에서 game_character.kt 파일을 열고, main 함수 옆의 '▶' (실행) 버튼을 클릭합니다.
+
+🖥️ 실행 결과 예시
+
+프로그램을 실행하면 main 함수에 정의된 시나리오에 따라 유닛 생성, 탑승, 이동, 하차, 공격 테스트 결과가 콘솔에 순서대로 출력됩니다.
+
+= Game Start =
 Knight1가 Shuttle1에 탑승합니다.
-Shuttle1이 (10, 10)으로 날아갑니다.
-Knight1은 Griffin2를 공격할 수 없습니다. (공중 유닛)
-Archer1이 Griffin2에게 화살을 발사합니다.
-Griffin1이 Archer2에게 번개를 내리칩니다.
+Archer1가 Shuttle1에 탑승합니다.
+Knight2가 Shuttle1에 탑승합니다.
+Archer2가 Shuttle1에 탑승합니다.
+... (모든 유닛 탑승) ...
 
-🧠 설계 원칙 적용
-원칙	적용 내용
-ISP	이동(Movable), 공격(Attackable) 기능을 인터페이스로 분리
-DRY	Shuttle·Transporter 구조를 제네릭으로 통합
-OCP	새로운 유닛 추가 시 기존 코드 수정 없이 확장 가능
-타입 안정성	Shuttle에는 지상 유닛만 탑승 가능
+=== 3. 셔틀 4대와 Griffin 5기 이동 ===
+Shuttle1가 날아서 (10, 10)로 이동합니다.
+Shuttle2가 날아서 (10, 10)로 이동합니다.
+Shuttle3가 날아서 (10, 10)로 이동합니다.
+Shuttle4가 날아서 (10, 10)로 이동합니다.
+Griffin1이(가) 날아서 (10, 10)로 이동합니다.
+... (모든 유닛 이동) ...
 
-🛠️ 기술 스택
-Language: Kotlin
-Build Tool: Gradle
-Concepts: 추상 클래스, 인터페이스, 제네릭, 상속, 오버라이딩
-Paradigm: 객체지향 프로그래밍 (OOP)
+=== 4. 셔틀에서 모든 캐릭터 하차 ===
+Shuttle1가 모든 승객을 내립니다:
+Knight1가 내립니다.
+Archer1가 내립니다.
+... (모든 유닛 하차) ...
 
-📂 파일 구조
-src/
- ├── Main.kt              // 메인 실행 및 테스트 코드
- ├── GameCharacter.kt     // 추상 클래스
- ├── Knight.kt, Archer.kt // 지상 유닛
- ├── Griffin.kt           // 공중 유닛
- └── Shuttle.kt           // 수송 유닛
+=== 5. Knight 1기 공격 테스트 ===
+--- Knight1의 공격 ---
+Knight1가 Knight2를 창으로 찌릅니다.
+Knight1가 Archer2를 창으로 찌릅니다.
+Knight1가 Griffin2를 공격 할 수 없습니다. (공중 유닛)
+Knight1가 Shuttle2를 공격 할 수 없습니다. (공중 유닛)
 
-🎯 학습 목표
-객체지향 원칙(ISP, DRY, OCP) 실습
-클래스 상속 및 인터페이스 활용
-코드 중복 최소화 및 확장성 확보
-타입 안전한 구조 설계 경험
+... (Archer, Griffin 공격 테스트) ...
+
+=== 시나리오 종료 ===
